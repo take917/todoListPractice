@@ -2,24 +2,55 @@ import React, { useState } from "react";
 import "./styles.css";
 
 export const App = () => {
-  const [data, setdata] = useState(["aaa", "ccc", "eee"]);
+  // todo入力部分に文字を入れる処理
+  const [inputText, setinputText] = useState("");
+  // 未完了のリストにデータを入れる
+  const [data, setdata] = useState([]);
+  // 完了のリストにデータを入れる
   const [compdata, setcompdata] = useState(["bbb", "ddd"]);
+  // inputTextの部分に何か入れたらデータを取得する処理
+  const onChange_inputText = (event) => setinputText(event.target.value);
+  // 追加ボタンを押したときの処理
+  const onClickButton = () => {
+    // 追加するデータがない場合、リストに入れないように実装
+    if (inputText === "") return;
+    // newTodosの配列を作り、dataの配列の最後にinputTextを追加したものを格納
+    const newTodos = [...data, inputText];
+    // useStateでセットしている、setdataを使うことで、中身をnewTodosのものに更新
+
+    setdata(newTodos);
+    // inputTextに入力後値が残っているので、値を消してplaceholderで設定した表示にする
+    setinputText("");
+  };
+  // 削除を押したときの処理
+  const onClickDelete = (index) => {
+    const newTodos = [...data];
+    newTodos.splice(index, 1);
+    setdata(newTodos);
+  };
   return (
     <>
       <div className="input-area">
-        <input placeholder="todoを入力" />
-        <button>追加</button>
+        {/* todo入力項目の入力された値を取得 */}
+        {/* onChangeの設定をすることで入力データを取得できる */}
+        <input
+          placeholder="todoを入力"
+          value={inputText}
+          onChange={onChange_inputText}
+        />
+        <button onClick={onClickButton}>追加</button>
       </div>
       <div className="incomplete-area">
         <p className="title">未完了のリスト</p>
         <ul>
           {/* useStateを使って配列データを１つずつ取得する */}
-          {data.map((a) => {
+          {data.map((data, index) => {
             return (
               <div key={data} className="list-row">
                 <li>{data}</li>
                 <button>完了</button>
-                <button>削除</button>
+                {/* ()=>をつけることで自動的に関数の実行が走るのを防ぐ */}
+                <button onClick={() => onClickDelete(index)}>削除</button>
               </div>
             );
           })}
