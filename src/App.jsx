@@ -7,7 +7,7 @@ export const App = () => {
   // 未完了のリストにデータを入れる
   const [data, setdata] = useState([]);
   // 完了のリストにデータを入れる
-  const [compdata, setcompdata] = useState(["bbb", "ddd"]);
+  const [compdata, setcompdata] = useState([]);
   // inputTextの部分に何か入れたらデータを取得する処理
   const onChange_inputText = (event) => setinputText(event.target.value);
   // 追加ボタンを押したときの処理
@@ -23,10 +23,35 @@ export const App = () => {
     setinputText("");
   };
   // 削除を押したときの処理
+  // indexを引数にすることで、該当の項目の削除ができる
   const onClickDelete = (index) => {
+    // newTodosに未完了のデータを入力
     const newTodos = [...data];
+    // spliceで該当番号を削除
     newTodos.splice(index, 1);
+    // 該当部分を削除後、再度newTodosに入力し更新
     setdata(newTodos);
+  };
+  const onClickcomp = (index) => {
+    // newTodosに未完了のデータを入力
+    const newdataTodos = [...data];
+    // spliceで該当番号を削除
+    newdataTodos.splice(index, 1);
+    // 該当部分を削除後、再度newTodosに入力し更新
+    const newcompdata = [...compdata, data[index]];
+    //編集した未完了のデータを再度入力
+    setdata(newdataTodos);
+    // 編集した完了のデータを再度入力
+    setcompdata(newcompdata);
+  };
+
+  const onClickback = (index) => {
+    const newcompdata = [...compdata];
+    newcompdata.splice(index, 1);
+
+    const newdataTodos = [...data, compdata[index]];
+    setcompdata(newcompdata);
+    setdata(newdataTodos);
   };
   return (
     <>
@@ -48,7 +73,7 @@ export const App = () => {
             return (
               <div key={data} className="list-row">
                 <li>{data}</li>
-                <button>完了</button>
+                <button onClick={() => onClickcomp(index)}>完了</button>
                 {/* ()=>をつけることで自動的に関数の実行が走るのを防ぐ */}
                 <button onClick={() => onClickDelete(index)}>削除</button>
               </div>
@@ -59,11 +84,11 @@ export const App = () => {
       <div className="complete-area">
         <p className="title">完了のリスト</p>
         <ul>
-          {compdata.map((b) => {
+          {compdata.map((compdata, index) => {
             return (
               <div key={compdata} className="list-row">
                 <li>{compdata}</li>
-                <button>完了</button>
+                <button onClick={() => onClickback(index)}>戻す</button>
               </div>
             );
           })}
