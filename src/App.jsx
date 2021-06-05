@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
-
+// コンポーネントを作成
 export const App = () => {
   // todo入力部分に文字を入れる処理
   const [inputText, setinputText] = useState("");
